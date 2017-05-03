@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         interface.cpp \
     player.cpp \
-    shared.cpp
+    shared.cpp \
+    automate.cpp
 
 HEADERS  += interface.h \
     player.h \
-    shared.h
+    shared.h \
+    automate.h
 
 FORMS    += interface.ui
 

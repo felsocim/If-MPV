@@ -24,9 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        remotecontroller.cpp
+        remotecontroller.cpp \
+    automate.cpp
 
-HEADERS  += remotecontroller.h
+HEADERS  += remotecontroller.h \
+    automate.h
 
 FORMS    += remotecontroller.ui
 
