@@ -33,3 +33,6 @@ HEADERS  += interface.h \
     shared.h
 
 FORMS    += interface.ui
+
+RESOURCES += \
+    ressources.qrc

@@ -12,6 +12,9 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QByteArray>
+#include <QDataStream>
+#include <QByteArray>
+#include <QtConcurrent/QtConcurrent>
 #include "shared.h"
 
 class Player : public QThread
@@ -19,14 +22,21 @@ class Player : public QThread
     Q_OBJECT
 private:
     QString player;
-    QString file;
     QLocalSocket * mpv;
+    void listener();
+    bool running;
+    QFuture<void> listening;
 protected:
     void run();
 public:
-    explicit Player(QString serverName, QString fileName, QObject * parent = NULL);
+    explicit Player(QString serverName, QObject * parent = NULL);
     ~Player();
     void sendCommand(kCommand command, QJsonArray parameters);
+    void observeProperty(int property);
+    void setRunning(bool value);
+signals:
+    void response(QJsonObject object);
+    void observer(int property, QJsonValue value);
 };
 
 #endif // PLAYER_H

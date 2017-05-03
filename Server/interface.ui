@@ -6,62 +6,94 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>303</width>
-    <height>172</height>
+    <width>561</width>
+    <height>217</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Interface</string>
   </property>
+  <property name="toolTip">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLineEdit" name="serverName">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>281</width>
-      <height>25</height>
+      <width>541</width>
+      <height>121</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QPushButton" name="runMpvServer">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>80</y>
-      <width>80</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Run MPV</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="fileName">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>281</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>/home/marek/test.mp3</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="volTest">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>80</y>
-      <width>80</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Vol 52</string>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="serverName">
+       <property name="text">
+        <string>mpvsocket</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="buttonScanMusicFolder">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Scan</string>
+       </property>
+       <property name="icon">
+        <iconset resource="ressources.qrc">
+         <normaloff>:/Server/16/system-search.png</normaloff>:/Server/16/system-search.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+D</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelFileDiscoveryCaption">
+       <property name="text">
+        <string>File discovery:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelFileDiscoveryResults">
+       <property name="text">
+        <string>At first, please, choose a folder containing music files.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="editSelectedFolder">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelSelectedFolderCaption">
+       <property name="text">
+        <string>Selected folder:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="runMpvServer">
+       <property name="text">
+        <string>Run MPV</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelServerName">
+       <property name="text">
+        <string>Server name:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -69,10 +101,27 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>303</width>
+     <width>561</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionChooseFolder"/>
+    <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -81,10 +130,87 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="menuOpenMusicFolder"/>
+   <addaction name="menuSettings"/>
+   <addaction name="separator"/>
+   <addaction name="menuExit"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="menuOpenMusicFolder">
+   <property name="icon">
+    <iconset resource="ressources.qrc">
+     <normaloff>:/Server/folder-open.png</normaloff>:/Server/folder-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Music Folder</string>
+   </property>
+   <property name="toolTip">
+    <string>Opens selected folder and scans it for music.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="menuSettings">
+   <property name="icon">
+    <iconset resource="ressources.qrc">
+     <normaloff>:/Server/system-run.png</normaloff>:/Server/system-run.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Shows settings dialog.</string>
+   </property>
+  </action>
+  <action name="menuExit">
+   <property name="icon">
+    <iconset resource="ressources.qrc">
+     <normaloff>:/Server/system-log-out.png</normaloff>:/Server/system-log-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Terminates the music server instance.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionChooseFolder">
+   <property name="text">
+    <string>Choose folder...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

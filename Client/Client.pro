@@ -1,10 +1,10 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-04-29T13:37:38
+# Project created by QtCreator 2017-05-03T22:25:31
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,8 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        interface.cpp
+        remotecontroller.cpp
 
-HEADERS  += interface.h
+HEADERS  += remotecontroller.h
 
-FORMS    += interface.ui
+FORMS    += remotecontroller.ui
+
+RESOURCES += \
+    ressources.qrc

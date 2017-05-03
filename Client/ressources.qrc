@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/size24">
+        <file>audio-x-generic.png</file>
+        <file>media-playback-start.png</file>
+        <file>network-wireless-encrypted.png</file>
+        <file>text-x-generic.png</file>
+        <file>applications-system.png</file>
+        <file>audio-volume-high.png</file>
+        <file>audio-volume-muted.png</file>
+        <file>gnome_media_playlist_shuffle.png</file>
+        <file>media-playback-pause.png</file>
+        <file>media-skip-backward.png</file>
+        <file>media-skip-backward-rtl.png</file>
+    </qresource>
+    <qresource prefix="/pictures">
+        <file>album.png</file>
+    </qresource>
+</RCC>
