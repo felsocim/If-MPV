@@ -9,12 +9,15 @@ RemoteController::RemoteController(QWidget *parent) :
     ui->setupUi(this);
     this->joinReceiver();
     ui->frameAllMusic->hide();
+    ui->framePlaylists->hide();
 
     QObject::connect(this->me, SIGNAL(readyRead()), this, SLOT(listener()));
     QObject::connect(ui->buttonPlayPause, SIGNAL(clicked(bool)), this, SLOT(onPlayPause()));
     QObject::connect(ui->actionNowPlaying, SIGNAL(triggered(bool)), this, SLOT(showNowPlaying()));
     QObject::connect(ui->actionAllMusic, SIGNAL(triggered(bool)), this, SLOT(showAllMusic()));
+    QObject::connect(ui->actionPlaylists, SIGNAL(triggered(bool)), this, SLOT(showPlaylists()));
     QObject::connect(ui->listMusic, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSongSelection(QModelIndex)));
+    QObject::connect(ui->listPlaylists, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistSelection(QModelIndex)));
 }
 
 RemoteController::~RemoteController()
@@ -34,22 +37,32 @@ void RemoteController::listener()
 {
     while(this->me->canReadLine())
     {
-        QByteArray data = this->me->readLine().trimmed();
+        QByteArray bytes = this->me->readLine().trimmed();
 
-        QJsonDocument doc = QJsonDocument::fromJson(data);
+        QJsonDocument doc = QJsonDocument::fromJson(bytes);
         QJsonObject obj = doc.object();
 
-        if( ((kTransfer)obj["type"].toInt()) == kMusicList )
-        {
-            QJsonArray data = obj["data"].toArray();
+        QJsonArray data = obj["data"].toArray();
 
-            for(int i = 0; i < data.size(); i++)
-            {
-                ui->listMusic->addItem(data[i].toString());
-            }
+        switch( ((kTransfer)obj["type"].toInt()) )
+        {
+            case kMusicList:
+                ui->listMusic->clear();
+                for(int i = 0; i < data.size(); i++)
+                {
+                    ui->listMusic->addItem(data[i].toString());
+                }
+                break;
+            case kPlaylistList:
+                ui->listPlaylists->clear();
+                for(int i = 0; i < data.size(); i++)
+                {
+                    ui->listPlaylists->addItem(data[i].toString());
+                }
+                break;
         }
 
-        qDebug() << "Received JSON: " + QString::fromUtf8(data.data(), data.length());
+        qDebug() << "Received JSON: " + QString::fromUtf8(bytes.data(), bytes.length());
     }
 }
 
@@ -81,12 +94,14 @@ void RemoteController::onPlayPause()
 void RemoteController::showNowPlaying()
 {
     ui->frameAllMusic->hide();
+    ui->framePlaylists->hide();
     ui->frameNowPlaying->show();
 }
 
 void RemoteController::showAllMusic()
 {
     ui->frameNowPlaying->hide();
+    ui->framePlaylists->hide();
 
     this->sendCommand(kGetMusicList, QJsonArray() << true);
 
@@ -97,4 +112,20 @@ void RemoteController::onSongSelection(QModelIndex item)
 {
     std::cout << "Selected: " + item.data().toString().toStdString() << std::endl;
     this->sendCommand(kLoadFile, QJsonArray() << item.data().toString());
+}
+
+void RemoteController::showPlaylists()
+{
+    ui->frameNowPlaying->hide();
+    ui->frameAllMusic->hide();
+
+    this->sendCommand(kGetPlaylists, QJsonArray() << true);
+
+    ui->framePlaylists->show();
+}
+
+void RemoteController::onPlaylistSelection(QModelIndex item)
+{
+    std::cout << "Selected playlist: " + item.data().toString().toStdString() << std::endl;
+    this->sendCommand(kLoadPlaylist, QJsonArray() << item.data().toString());
 }

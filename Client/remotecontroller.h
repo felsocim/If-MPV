@@ -37,7 +37,9 @@ private slots:
     void onPlayPause();
     void showNowPlaying();
     void showAllMusic();
+    void showPlaylists();
     void onSongSelection(QModelIndex item);
+    void onPlaylistSelection(QModelIndex item);
 };
 
 #endif // REMOTECONTROLLER_H

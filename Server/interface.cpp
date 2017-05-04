@@ -1,8 +1,8 @@
 #include "interface.h"
 #include "ui_interface.h"
 
-QStringList allowedExtensions = {"mp3", "wav", "wma"};
-QStringList allowedPlaylistExtensions = {"m3u", "wpl"};
+QStringList allowedExtensions = {"mp3", "wav"};
+QStringList allowedPlaylistExtensions = {"m3u"};
 
 Interface::Interface(QWidget *parent) :
     QMainWindow(parent),
@@ -147,6 +147,9 @@ void Interface::listen()
             {
                 case kGetMusicList:
                     this->replyToClient(kMusicList, QJsonArray::fromStringList(*this->musicFileList));
+                    break;
+                case kGetPlaylists:
+                    this->replyToClient(kPlaylistList, QJsonArray::fromStringList(*this->playlists));
                     break;
             }
         }
