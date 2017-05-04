@@ -136,10 +136,43 @@ void Interface::listen()
         QJsonDocument doc = QJsonDocument::fromJson(data);
         QJsonObject obj = doc.object();
 
-        this->player->sendCommand((kCommand)obj["command"].toInt(), obj["parameters"].toArray());
+        if( ((kCommand)obj["command"].toInt()) < kGetMusicList )
+        {
+            this->player->sendCommand((kCommand)obj["command"].toInt(), obj["parameters"].toArray());
+            qDebug() << "Is MPV command: " + QString::fromUtf8(data.data(), data.length());
+        }
+        else //is this server command
+        {
+            switch(((kCommand)obj["command"].toInt()))
+            {
+                case kGetMusicList:
+                    this->replyToClient(kMusicList, QJsonArray::fromStringList(*this->musicFileList));
+                    break;
+            }
+        }
+
+
         //signal to the state machine
-        qDebug() << "Is command: " + QString::fromUtf8(data.data(), data.length());
+
 
         qDebug() << "Received JSON: " + QString::fromUtf8(data.data(), data.length());
+    }
+}
+
+void Interface::replyToClient(kTransfer type, QJsonArray data)
+{
+    QJsonObject cmd;
+
+    cmd.insert("type", type);
+    cmd.insert("data", data);
+
+    QByteArray bytes = QJsonDocument(cmd).toJson(QJsonDocument::Compact) + "\n";
+
+    if(this->client != NULL)
+    {
+        this->client->write(bytes.data(), bytes.length());
+        this->client->flush();
+
+        std::cout << "Socket reply sent." << std::endl;
     }
 }

@@ -27,6 +27,7 @@ public:
     explicit Interface(QWidget *parent = 0);
     ~Interface();
     void launchServer();
+    void replyToClient(kTransfer type, QJsonArray data);
 
 private:
     Ui::Interface *ui;

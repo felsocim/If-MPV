@@ -11,6 +11,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QByteArray>
+#include <QStringList>
 #include "../Server/shared.h"
 
 namespace Ui {
@@ -33,6 +34,8 @@ private:
 private slots:
     void listener();
     void onPlayPause();
+    void showNowPlaying();
+    void showAllMusic();
 };
 
 #endif // REMOTECONTROLLER_H

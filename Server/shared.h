@@ -12,7 +12,8 @@ enum kCommand
     kLoadFile,
     kLoadPlaylist,
     kShuffle,
-    kQuit
+    kQuit,
+    kGetMusicList
 };
 
 enum kProperty
