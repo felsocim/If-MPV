@@ -1,3 +1,7 @@
+/**
+  *Marek Felsoci, Arnaud Pinsun
+  *
+  **/
 #ifndef AUTOMATE_H
 #define AUTOMATE_H
 

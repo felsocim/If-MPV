@@ -1,3 +1,7 @@
+/**
+  *Marek Felsoci, Arnaud Pinsun
+  *
+  **/
 #include "remotecontroller.h"
 #include <QApplication>
 

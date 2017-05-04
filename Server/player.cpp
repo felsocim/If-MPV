@@ -1,3 +1,7 @@
+/**
+  *Marek Felsoci, Arnaud Pinsun
+  *
+  **/
 #include "player.h"
 
 QString mpvCommands[] = {"seek", "set_property", "get_property", "observe_property", "playlist-next", "playlist-prev", "loadfile", "loadlist", "playlist-shuffle", "quit"};

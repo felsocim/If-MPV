@@ -1,3 +1,7 @@
+/**
+  *Marek Felsoci, Arnaud Pinsun
+  *
+  **/
 #include "automate.h"
 #include "shared.h"
   // assignProperty permet d'assigner une prpriété au moment de l'entrée dans la phase.

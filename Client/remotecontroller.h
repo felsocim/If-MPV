@@ -1,3 +1,7 @@
+/**
+  *Marek Felsoci, Arnaud Pinsun
+  *
+  **/
 #ifndef REMOTECONTROLLER_H
 #define REMOTECONTROLLER_H
 

@@ -1,3 +1,7 @@
+/**
+  *Marek Felsoci, Arnaud Pinsun
+  *
+  **/
 #ifndef PLAYER_H
 #define PLAYER_H
 #define GET_PERCET_POS_PROPERTY_REQUEST_ID 100
