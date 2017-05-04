@@ -91,6 +91,7 @@ void RemoteController::listener()
                 this->ui->sliderPosition->setValue(data[2].toInt());
                 this->setNomFichier( data[3].toString() );
                 this->setNomPlaylist( data[4].toString() );
+                this->sendCommand(kGetMetadata, QJsonArray() << "null");
                 break;
             case kCurrentPlaylistContent:
                 ui->listCurrentPlaylist->clear();
