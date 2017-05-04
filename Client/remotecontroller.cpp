@@ -32,6 +32,8 @@ RemoteController::RemoteController(QWidget *parent) :
     QObject::connect(ui->actionAllMusic, SIGNAL(triggered(bool)), this, SLOT(showAllMusic()));
     QObject::connect(ui->actionPlaylists, SIGNAL(triggered(bool)), this, SLOT(showPlaylists()));
     QObject::connect(ui->actionPreferences, SIGNAL(triggered(bool)), this, SLOT(showPreferences()));
+    QObject::connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(onMenuHelp()));
+    QObject::connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(onMenuQuit()));
     QObject::connect(ui->listMusic, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSongSelection(QModelIndex)));
     QObject::connect(ui->listPlaylists, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistSelection(QModelIndex)));
 }
@@ -105,39 +107,80 @@ void RemoteController::listener()
 
 void RemoteController::majAutomate(phase p){
     QIcon icon_pause(":/size24/media-playback-pause.png");
+    QIcon icon_play(":/size24/media-playback-start.png");
+    QIcon icon_vol(":/size24/audio-volume-high.png");
+    QIcon icon_mute(":/size24/audio-volume-muted.png");
 
     switch(p){
         case kPhaseInitial :
             this->isPlaying = true;
-            ui->buttonPlayPause->setIcon(icon_pause);
+            this->isMute = false;
+            this->isShuffle = false;
+            this->ui->buttonPlayPause->setIcon(icon_pause);
+            this->ui->buttonMute->setIcon(icon_mute);
             qDebug()<<"phase init";
         break;
 
         case kPhaseMuet:
+            this->isPlaying = true;
+            this->isMute = true;
+            this->isShuffle = false;
+            this->ui->buttonPlayPause->setIcon(icon_pause);
+            this->ui->buttonMute->setIcon(icon_vol);
             qDebug()<<"etat muet";
         break;
 
         case kPhaseAleat:
+            this->isPlaying = true;
+            this->isMute = false;
+            this->isShuffle = true;
+            this->ui->buttonPlayPause->setIcon(icon_pause);
+            this->ui->buttonPlayPause->setIcon(icon_pause);
             qDebug()<<"etat aleat";
         break;
 
         case kPhasePause:
+            this->isPlaying = false;
+            this->isMute = false;
+            this->isShuffle = false;
+            this->ui->buttonMute->setIcon(icon_mute);
+            this->ui->buttonPlayPause->setIcon(icon_play);
             qDebug()<<"etat pause";
         break;
 
         case kPhaseMuetAleat:
+            this->isPlaying = true;
+            this->isMute = true;
+            this->isShuffle = true;
+            this->ui->buttonMute->setIcon(icon_vol);
+            this->ui->buttonPlayPause->setIcon(icon_pause);
             qDebug()<<"etat muet-aleat";
         break;
 
         case kPhaseMuetPause:
+            this->isPlaying = false;
+            this->ui->buttonPlayPause->setIcon(icon_play);
+            this->isMute = true;
+            this->isShuffle = false;
+            this->ui->buttonMute->setIcon(icon_vol);
             qDebug()<<"etat muet-pause";
         break;
 
         case kPhaseAleatPause:
+            this->isPlaying = false;
+            this->isMute = false;
+            this->isShuffle = true;
+            this->ui->buttonPlayPause->setIcon(icon_play);
+            this->ui->buttonMute->setIcon(icon_mute);
             qDebug()<<"etat aleat-pause";
         break;
 
         case kPhaseMuetAleatPause:
+            this->isPlaying = false;
+            this->isMute = true;
+            this->isShuffle = true;
+            this->ui->buttonPlayPause->setIcon(icon_play);
+            this->ui->buttonMute->setIcon(icon_vol);
             qDebug()<<"etat muet-aleat-pause";
         break;
     }
@@ -336,4 +379,14 @@ void RemoteController::showCurrentPlaylist()
     ui->framePlaylists->hide();
     ui->framePreferences->hide();
     ui->frameCurrentPlaylist->show();
+}
+
+void RemoteController::onMenuQuit()
+{
+    QApplication::exit(0);
+}
+
+void RemoteController::onMenuHelp()
+{
+    QMessageBox::about(this, "About Music Player", "This is a simple client-server user interface for MPV music player developed within university studies by Marek Felsoci and Arnaud Pinsun.");
 }

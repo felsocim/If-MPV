@@ -23,7 +23,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>RemoteController</string>
+   <string>Music Player Remote Control Panel</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ressources.qrc">
+    <normaloff>:/size48/audio-x-generic-big.png</normaloff>:/size48/audio-x-generic-big.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QFrame" name="frameNowPlaying">

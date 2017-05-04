@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDateTime>
+#include <QMessageBox>
 #include <taglib/taglib.h>
 #include <taglib/fileref.h>
 #include "player.h"
@@ -70,6 +71,7 @@ private slots:
     void onClientDisconnect();
     // slot concernant l'automate
     void message(phase);
+    void onMenuHelp();
 };
 
 #endif // INTERFACE_H

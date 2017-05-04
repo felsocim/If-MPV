@@ -3,6 +3,7 @@
         <file>folder-open.png</file>
         <file>system-run.png</file>
         <file>system-log-out.png</file>
+        <file>audio-x-generic-big.png</file>
     </qresource>
     <qresource prefix="/Server/16">
         <file>system-search.png</file>

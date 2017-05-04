@@ -23,11 +23,13 @@ Interface::Interface(QWidget *parent) :
     QObject::connect(ui->runMpvServer, SIGNAL(clicked(bool)), this, SLOT(startPlayerInstance()));
     QObject::connect(ui->menuOpenMusicFolder, SIGNAL(triggered(bool)), this, SLOT(selectMusicFolder()));
     QObject::connect(ui->actionChooseFolder, SIGNAL(triggered(bool)), this, SLOT(selectMusicFolder()));
+    QObject::connect(ui->menuOpenMusicFolder, SIGNAL(triggered(bool)), this, SLOT(selectMusicFolder()));
     QObject::connect(ui->menuExit, SIGNAL(triggered(bool)), this, SLOT(terminate()));
     QObject::connect(ui->actionExit, SIGNAL(triggered(bool)), this, SLOT(terminate()));
+    QObject::connect(ui->menuExit, SIGNAL(triggered(bool)), this, SLOT(terminate()));
+    QObject::connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(onMenuHelp()));
     QObject::connect(ui->buttonScanMusicFolder, SIGNAL(clicked(bool)), this, SLOT(musicDiscovery()));
     QObject::connect(this->server, SIGNAL(newConnection()), this, SLOT(incomingConnection()));
-
 }
 
 Interface::~Interface()
@@ -35,6 +37,11 @@ Interface::~Interface()
     delete ui;
     this->player->terminate();
     this->player->wait();
+}
+
+void Interface::onMenuHelp()
+{
+    QMessageBox::about(this, "About Music Player", "This is a simple client-server user interface for MPV music player developed within university studies by Marek Felsoci and Arnaud Pinsun.");
 }
 
 void Interface::startPlayerInstance()
@@ -258,7 +265,7 @@ void Interface::savePlaylist(QJsonArray songs)
 
     QDateTime now = QDateTime::currentDateTime();
 
-    QString filename = this->currentMusicFolder + "/MyPlaylist-" + now.toString("dd-MM-YYY") + ".m3u";
+    QString filename = this->currentMusicFolder + "/MyPlaylist-" + now.toString("hh-mm-ss-dd-MM-YYYY") + ".m3u";
 
     QFile playlistFile(filename);
 

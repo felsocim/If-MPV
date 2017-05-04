@@ -17,4 +17,7 @@
     <qresource prefix="/pictures">
         <file>album.png</file>
     </qresource>
+    <qresource prefix="/size48">
+        <file>audio-x-generic-big.png</file>
+    </qresource>
 </RCC>

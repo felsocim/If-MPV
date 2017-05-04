@@ -7,6 +7,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QMessageBox>
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QByteArray>
@@ -61,6 +62,8 @@ private slots:
     void onConnectSynchronize();
     void onCurrentSave();
     void showCurrentPlaylist();
+    void onMenuQuit();
+    void onMenuHelp();
 };
 
 #endif // REMOTECONTROLLER_H
