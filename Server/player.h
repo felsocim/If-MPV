@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonValue>
 #include <QByteArray>
 #include <QDataStream>
 #include <QByteArray>

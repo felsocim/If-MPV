@@ -85,9 +85,16 @@ void Player::sendCommand(kCommand command, QJsonArray parameters)
 
     QJsonObject cmd;
 
-    parameters.insert(0, mpvCommands[command]);
+    if(parameters[0].toString().compare("null") == 0)
+    {
+        cmd.insert("command", QJsonArray() << mpvCommands[command]);
+    }
+    else
+    {
+        parameters.insert(0, mpvCommands[command]);
 
-    cmd.insert("command", parameters);
+        cmd.insert("command", parameters);
+    }
 
     QByteArray bytes = QJsonDocument(cmd).toJson(QJsonDocument::Compact) + "\n";
 
@@ -96,6 +103,6 @@ void Player::sendCommand(kCommand command, QJsonArray parameters)
         this->mpv->write(bytes.data(), bytes.length());
         this->mpv->flush();
 
-        std::cout << "Socket command sent." << std::endl;
+        std::cout << "Socket command sent." + QString::fromUtf8(bytes.data(), bytes.length()).toStdString() << std::endl;
     }
 }

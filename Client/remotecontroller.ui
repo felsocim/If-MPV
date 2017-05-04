@@ -145,6 +145,9 @@
        <height>16</height>
       </rect>
      </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -290,7 +293,7 @@
       </size>
      </property>
     </widget>
-    <widget class="QSlider" name="horizontalSlider">
+    <widget class="QSlider" name="sliderVolume">
      <property name="geometry">
       <rect>
        <x>330</x>
@@ -298,6 +301,12 @@
        <width>111</width>
        <height>16</height>
       </rect>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>100</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
