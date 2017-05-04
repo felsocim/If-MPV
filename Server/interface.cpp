@@ -133,6 +133,8 @@ void Interface::incomingConnection()
     QObject::connect(this->client, SIGNAL(disconnected()), this->client, SLOT(deleteLater()));
     QObject::connect(this->client, SIGNAL(disconnected()), this, SLOT(onClientDisconnect()));
     QObject::connect(this->client, SIGNAL(readyRead()), this, SLOT(listen()));
+
+    this->sendState();
 }
 
 void Interface::onClientDisconnect()
@@ -155,6 +157,18 @@ void Interface::listen()
             qDebug() << "Is MPV command: " + QString::fromUtf8(data.data(), data.length());
 
             //Traitement messages automate
+            if( ((kCommand)obj["command"].toInt()) == kLoadFile )
+            {
+                this->nomFichier = obj["parameters"].toArray()[0].toString();
+                this->sendState();
+            }
+
+            if( ((kCommand)obj["command"].toInt()) == kLoadPlaylist )
+            {
+                this->nomPlaylist = obj["parameters"].toArray()[0].toString();
+                this->sendState();
+            }
+
             if( ((kCommand)obj["command"].toInt()) == kSetProperty )
             {
                 if( obj["parameters"].toArray()[0].toString().compare("mute") == 0 )
@@ -164,6 +178,16 @@ void Interface::listen()
                 else if ( obj["parameters"].toArray()[0].toString().compare("pause") == 0 )
                 {
                     emit signalClient(kButtonPause);
+                }
+                else if ( obj["parameters"].toArray()[0].toString().compare("volume") == 0 )
+                {
+                    this->volume = obj["parameters"].toArray()[1].toInt();
+                    this->sendState();
+                }
+                else if ( obj["parameters"].toArray()[0].toString().compare("percent-pos") == 0 )
+                {
+                    this->position = obj["parameters"].toArray()[1].toInt();
+                    this->sendState();
                 }
             }
 
