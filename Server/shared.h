@@ -1,6 +1,17 @@
 #ifndef SHARED_H
 #define SHARED_H
 
+enum phase {
+    kPhaseInitial,
+    kPhaseMuet,
+    kPhaseAleat,
+    kPhasePause,
+    kPhaseMuetAleat,
+    kPhaseMuetPause,
+    kPhaseAleatPause,
+    kPhaseMuetAleatPause
+};
+
 enum kCommand
 {
     kSeek,
@@ -14,7 +25,10 @@ enum kCommand
     kShuffle,
     kQuit,
     kGetMusicList,
-    kGetPlaylists
+    kGetPlaylists,
+    kButtonMuet,
+    kButtonPause,
+    kButtonAleat
 };
 
 enum kProperty
@@ -29,7 +43,8 @@ enum kTransfer
 {
     kMusicList,
     kPlaylistList,
-    kRadioList
+    kRadioList,
+    kCurrentState
 };
 
 #endif // SHARED_H

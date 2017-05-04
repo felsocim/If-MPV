@@ -13,6 +13,13 @@ Interface::Interface(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // initialisation des variables
+    this->nomFichier="";
+    this->nomPlaylist="";
+    this->volume=100;
+    this->position=0;
+    this->client = NULL;
+
     QObject::connect(ui->runMpvServer, SIGNAL(clicked(bool)), this, SLOT(startPlayerInstance()));
     QObject::connect(ui->menuOpenMusicFolder, SIGNAL(triggered(bool)), this, SLOT(selectMusicFolder()));
     QObject::connect(ui->actionChooseFolder, SIGNAL(triggered(bool)), this, SLOT(selectMusicFolder()));
@@ -124,7 +131,13 @@ void Interface::incomingConnection()
     if(this->client == NULL) this->client = this->server->nextPendingConnection();
 
     QObject::connect(this->client, SIGNAL(disconnected()), this->client, SLOT(deleteLater()));
+    QObject::connect(this->client, SIGNAL(disconnected()), this, SLOT(onClientDisconnect()));
     QObject::connect(this->client, SIGNAL(readyRead()), this, SLOT(listen()));
+}
+
+void Interface::onClientDisconnect()
+{
+    this->client = NULL;
 }
 
 void Interface::listen()
@@ -140,6 +153,24 @@ void Interface::listen()
         {
             this->player->sendCommand((kCommand)obj["command"].toInt(), obj["parameters"].toArray());
             qDebug() << "Is MPV command: " + QString::fromUtf8(data.data(), data.length());
+
+            //Traitement messages automate
+            if( ((kCommand)obj["command"].toInt()) == kSetProperty )
+            {
+                if( obj["parameters"].toArray()[0].toString().compare("mute") == 0 )
+                {
+                    emit signalClient(kButtonMuet);
+                }
+                else if ( obj["parameters"].toArray()[0].toString().compare("pause") == 0 )
+                {
+                    emit signalClient(kButtonPause);
+                }
+            }
+
+            if( ((kCommand)obj["command"].toInt()) == kShuffle )
+            {
+                emit signalClient(kButtonAleat);
+            }
         }
         else //is this server command
         {
@@ -173,9 +204,63 @@ void Interface::replyToClient(kTransfer type, QJsonArray data)
 
     if(this->client != NULL)
     {
+        std::cout << "je veux envoyer un truc" << std::endl;
         this->client->write(bytes.data(), bytes.length());
         this->client->flush();
 
         std::cout << "Socket reply sent." << std::endl;
     }
+}
+
+void Interface::message(phase p){
+
+    this->etat = p;
+
+    switch(p){
+        case kPhaseInitial :
+            qDebug()<<"phase init";
+        break;
+
+        case kPhaseMuet:
+            qDebug()<<"etat muet";
+        break;
+
+        case kPhaseAleat:
+            qDebug()<<"etat aleat";
+        break;
+
+        case kPhasePause:
+            qDebug()<<"etat pause";
+        break;
+
+        case kPhaseMuetAleat:
+            qDebug()<<"etat muet-aleat";
+        break;
+
+        case kPhaseMuetPause:
+            qDebug()<<"etat muet-pause";
+        break;
+
+        case kPhaseAleatPause:
+            qDebug()<<"etat aleat-pause";
+        break;
+
+        case kPhaseMuetAleatPause:
+            qDebug()<<"etat muet-aleat-pause";
+        break;
+    }
+    this->sendState();
+
+}
+
+// format des messages transmis : etat_automate / volume / position / musique lue / playlist courante
+void Interface::sendState(){
+    QJsonArray currentState;
+    currentState << this->etat;
+    currentState << this->volume;
+    currentState << this->position;
+    currentState << this->nomFichier;
+    currentState << this->nomPlaylist;
+
+    this->replyToClient(kCurrentState,currentState);
 }

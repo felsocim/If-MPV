@@ -13,6 +13,7 @@
 #include <QList>
 #include "player.h"
 #include "shared.h"
+#include "automate.h"
 
 namespace Ui
 {
@@ -28,6 +29,7 @@ public:
     ~Interface();
     void launchServer();
     void replyToClient(kTransfer type, QJsonArray data);
+    void sendState();
 
 private:
     Ui::Interface *ui;
@@ -38,6 +40,15 @@ private:
     QStringList * playlists;
     QLocalServer * server;
     QLocalSocket * client;
+    //  Variables concernant l'état de MPV
+    phase etat;
+    int volume;
+    int position;
+    QString nomFichier;
+    QString nomPlaylist;
+
+signals:
+    void signalClient(kCommand);
 
 private slots:
     void startPlayerInstance();
@@ -48,6 +59,9 @@ private slots:
     void propertyStatus(int property, QJsonValue value);
     void incomingConnection();
     void listen();
+    void onClientDisconnect();
+    // slot concernant l'automate
+    void message(phase);
 };
 
 #endif // INTERFACE_H

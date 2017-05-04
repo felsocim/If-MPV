@@ -1,5 +1,5 @@
 #include "automate.h"
-
+#include "shared.h"
   // assignProperty permet d'assigner une prpriété au moment de l'entrée dans la phase.
  // history state permet en gros de gader un historique des osus-états d'un état...
 // Qvariant permet de stocker un grand nombre de type (pas plusieurs a la fois mais differnt pdt le temps)
@@ -74,7 +74,7 @@ Automate::Automate(QObject *parent) : QObject(parent)
     */
 }
 
-void Automate::messages(boutton b){
+void Automate::messages(kCommand b){
     switch (b) {
     case kButtonMuet:
         emit signalMuet();
@@ -91,6 +91,7 @@ void Automate::messages(boutton b){
 }
 
 void Automate::setupMessages(){
+    // &QState::exited pour le signal de sortie d'état
   QObject::connect(etatInitial, &QState::entered, [this](){
       emit signalMachine(kPhaseInitial);
     });

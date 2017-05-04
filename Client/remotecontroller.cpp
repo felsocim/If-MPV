@@ -70,9 +70,52 @@ void RemoteController::listener()
                     ui->listPlaylists->addItem(data[i].toString());
                 }
                 break;
+            case kCurrentState:
+                this->majAutomate( (phase)data[0].toInt() );
+                this->ui->sliderVolume->setValue( data[1].toInt() );
+                this->ui->sliderPosition->setValue(data[2].toInt());
+                //this->setNomFichier( data[3].toString() );
+                //this->setNomPlaylist( data[4].toString() );
+                break;
         }
 
         qDebug() << "Received JSON: " + QString::fromUtf8(bytes.data(), bytes.length());
+    }
+}
+
+void RemoteController::majAutomate(phase p){
+    switch(p){
+        case kPhaseInitial :
+            qDebug()<<"phase init";
+        break;
+
+        case kPhaseMuet:
+            qDebug()<<"etat muet";
+        break;
+
+        case kPhaseAleat:
+            qDebug()<<"etat aleat";
+        break;
+
+        case kPhasePause:
+            qDebug()<<"etat pause";
+        break;
+
+        case kPhaseMuetAleat:
+            qDebug()<<"etat muet-aleat";
+        break;
+
+        case kPhaseMuetPause:
+            qDebug()<<"etat muet-pause";
+        break;
+
+        case kPhaseAleatPause:
+            qDebug()<<"etat aleat-pause";
+        break;
+
+        case kPhaseMuetAleatPause:
+            qDebug()<<"etat muet-aleat-pause";
+        break;
     }
 }
 

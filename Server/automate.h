@@ -10,24 +10,14 @@
 #include <QTimer>
 #include <QDebug>
 #include <QPushButton>
+#include "shared.h"
 
-// Les etats de l'automate que l'on va communiquer avec l'UI
-enum phase {
-    kPhaseInitial,
-    kPhaseMuet,
-    kPhaseAleat,
-    kPhasePause,
-    kPhaseMuetAleat,
-    kPhaseMuetPause,
-    kPhaseAleatPause,
-    kPhaseMuetAleatPause
-};
-
+/*
 enum boutton {
     kButtonMuet,
     kButtonPause,
     kButtonAleat
-};
+};*/
 
 class Automate : public QObject
 {
@@ -58,8 +48,7 @@ signals:
     void signalPause();
     void signalAleat();
 public slots:
-    void messages(boutton);
-    //void connectionFromClient();
+    void messages(kCommand);
 };
 
 #endif // AUTOMATE_H

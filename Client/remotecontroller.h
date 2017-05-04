@@ -33,6 +33,11 @@ private:
     QLocalSocket * me;
     void joinReceiver();
     void sendCommand(kCommand command, QJsonArray parameters);
+    void majAutomate(phase p);
+    //void setNomFichier(QString s);
+    //void setNomPlaylist(QString s);
+    QString nomFichier;
+    QString nomPlaylist;
     bool isPlaylist;
     bool isPlaying;
     bool isShuffle;
