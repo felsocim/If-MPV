@@ -12,6 +12,7 @@
 #include <QDataStream>
 #include <QByteArray>
 #include <QStringList>
+#include <QModelIndex>
 #include "../Server/shared.h"
 
 namespace Ui {
@@ -36,6 +37,7 @@ private slots:
     void onPlayPause();
     void showNowPlaying();
     void showAllMusic();
+    void onSongSelection(QModelIndex item);
 };
 
 #endif // REMOTECONTROLLER_H

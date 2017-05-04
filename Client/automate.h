@@ -59,7 +59,7 @@ signals:
     void signalAleat();
 public slots:
     void messages(boutton);
-    void connectionFromClient();
+    //void connectionFromClient();
 };
 
 #endif // AUTOMATE_H

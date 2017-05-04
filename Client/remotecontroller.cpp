@@ -14,6 +14,7 @@ RemoteController::RemoteController(QWidget *parent) :
     QObject::connect(ui->buttonPlayPause, SIGNAL(clicked(bool)), this, SLOT(onPlayPause()));
     QObject::connect(ui->actionNowPlaying, SIGNAL(triggered(bool)), this, SLOT(showNowPlaying()));
     QObject::connect(ui->actionAllMusic, SIGNAL(triggered(bool)), this, SLOT(showAllMusic()));
+    QObject::connect(ui->listMusic, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSongSelection(QModelIndex)));
 }
 
 RemoteController::~RemoteController()
@@ -90,4 +91,10 @@ void RemoteController::showAllMusic()
     this->sendCommand(kGetMusicList, QJsonArray() << true);
 
     ui->frameAllMusic->show();
+}
+
+void RemoteController::onSongSelection(QModelIndex item)
+{
+    std::cout << "Selected: " + item.data().toString().toStdString() << std::endl;
+    this->sendCommand(kLoadFile, QJsonArray() << item.data().toString());
 }
