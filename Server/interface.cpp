@@ -27,6 +27,7 @@ Interface::Interface(QWidget *parent) :
     QObject::connect(ui->actionExit, SIGNAL(triggered(bool)), this, SLOT(terminate()));
     QObject::connect(ui->buttonScanMusicFolder, SIGNAL(clicked(bool)), this, SLOT(musicDiscovery()));
     QObject::connect(this->server, SIGNAL(newConnection()), this, SLOT(incomingConnection()));
+
 }
 
 Interface::~Interface()
@@ -210,6 +211,12 @@ void Interface::listen()
                 case kMetadata:
                     this->sendCurrentMetadata();
                     break;
+                case kSaveCurrentPlaylist:
+                    this->savePlaylist(obj["parameters"].toArray());
+                    break;
+                case kGetCurrentPlaylistContent:
+                    this->replyToClient(kCurrentPlaylistContent, this->loadPlaylistContent(obj["parameters"].toArray()[0].toString()));
+                    break;
             }
         }
 
@@ -219,6 +226,63 @@ void Interface::listen()
 
         qDebug() << "Received JSON: " + QString::fromUtf8(data.data(), data.length());
     }
+}
+
+QJsonArray Interface::loadPlaylistContent(QString playlist)
+{
+    QFile playlistFile(playlist);
+    QStringList * name(new QStringList);
+
+    if(!playlistFile.open(QIODevice::ReadOnly)) return QJsonArray();
+
+    QTextStream stream(&playlistFile);
+
+    if(stream.status() != QTextStream::Ok) return QJsonArray();
+
+    while(!stream.atEnd())
+    {
+        QString line = stream.readLine();
+
+        if(!line.startsWith("#"))
+            name->append(line);
+    }
+
+    playlistFile.close();
+
+    return QJsonArray::fromStringList(*name);
+}
+
+void Interface::savePlaylist(QJsonArray songs)
+{
+    if(this->currentMusicFolder.isEmpty()) return;
+
+    QDateTime now = QDateTime::currentDateTime();
+
+    QString filename = this->currentMusicFolder + "/MyPlaylist-" + now.toString("dd-MM-YYY") + ".m3u";
+
+    QFile playlistFile(filename);
+
+    qDebug() << filename;
+
+    if(!playlistFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) return;
+
+    QTextStream stream(&playlistFile);
+
+    if(stream.status() != QTextStream::Ok) return;
+
+    stream << "#EXTM3U" << endl;
+
+    foreach (QJsonValue path, songs)
+    {
+        TagLib::FileRef file(path.toString().toStdString().data());
+        TagLib::String title = file.tag()->title();
+        int duration = file.audioProperties()->lengthInSeconds();
+
+        stream << "#EXTINF:" << QString::number(duration) << "," << QString(title.toCString(true)) << endl;
+        stream << path.toString() << endl;
+    }
+
+    playlistFile.close();
 }
 
 void Interface::replyToClient(kTransfer type, QJsonArray data)

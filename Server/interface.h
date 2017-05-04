@@ -11,6 +11,9 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QList>
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
 #include <taglib/taglib.h>
 #include <taglib/fileref.h>
 #include "player.h"
@@ -33,6 +36,8 @@ public:
     void replyToClient(kTransfer type, QJsonArray data);
     void sendState();
     void sendCurrentMetadata();
+    void savePlaylist(QJsonArray songs);
+    QJsonArray loadPlaylistContent(QString playlist);
 
 private:
     Ui::Interface *ui;

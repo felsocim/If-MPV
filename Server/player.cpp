@@ -50,9 +50,7 @@ void Player::listener()
             QJsonDocument document = QJsonDocument::fromJson(bytes);
             QJsonObject object = document.object();
 
-            //qDebug() << "Signal emit" + object["error"].toString();
-
-            if(object.contains("event") && object["event"].toString().compare("property-change"))
+            if(object["id"].toInt() == GET_PERCET_POS_PROPERTY_REQUEST_ID)
             {
                 qDebug() << "data: " + object["event"].toString() + object["name"].toString();
                 emit observer(object["id"].toInt(), object["data"]);
@@ -94,6 +92,11 @@ void Player::sendCommand(kCommand command, QJsonArray parameters)
         parameters.insert(0, mpvCommands[command]);
 
         cmd.insert("command", parameters);
+
+        if(command == kGetProperty && parameters[0].toString().compare("percent-pos"))
+        {
+            cmd.insert("request_id", GET_PERCET_POS_PROPERTY_REQUEST_ID);
+        }
     }
 
     QByteArray bytes = QJsonDocument(cmd).toJson(QJsonDocument::Compact) + "\n";
@@ -105,4 +108,9 @@ void Player::sendCommand(kCommand command, QJsonArray parameters)
 
         std::cout << "Socket command sent." + QString::fromUtf8(bytes.data(), bytes.length()).toStdString() << std::endl;
     }
+}
+
+bool Player::getRunning()
+{
+    return this->running;
 }

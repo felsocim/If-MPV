@@ -1,5 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+#define GET_PERCET_POS_PROPERTY_REQUEST_ID 100
 
 #include <iostream>
 #include <string>
@@ -35,6 +36,7 @@ public:
     void sendCommand(kCommand command, QJsonArray parameters);
     void observeProperty(int property);
     void setRunning(bool value);
+    bool getRunning();
 signals:
     void response(QJsonObject object);
     void observer(int property, QJsonValue value);

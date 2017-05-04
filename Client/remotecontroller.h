@@ -12,6 +12,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QByteArray>
+#include <QFileDialog>
 #include <QStringList>
 #include <QModelIndex>
 #include "../Server/shared.h"
@@ -48,6 +49,7 @@ private slots:
     void showNowPlaying();
     void showAllMusic();
     void showPlaylists();
+    void showPreferences();
     void onSongSelection(QModelIndex item);
     void onPlaylistSelection(QModelIndex item);
     void onPrevious();
@@ -57,6 +59,8 @@ private slots:
     void onVolumeChange(int val);
     void onPositionChange(int val);
     void onConnectSynchronize();
+    void onCurrentSave();
+    void showCurrentPlaylist();
 };
 
 #endif // REMOTECONTROLLER_H

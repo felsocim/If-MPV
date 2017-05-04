@@ -10,6 +10,8 @@ RemoteController::RemoteController(QWidget *parent) :
     this->joinReceiver();
     ui->frameAllMusic->hide();
     ui->framePlaylists->hide();
+    ui->frameCurrentPlaylist->hide();
+    ui->framePreferences->hide();
     this->isPlaying = false;
     this->isMute = false;
     this->isShuffle = false;
@@ -22,11 +24,14 @@ RemoteController::RemoteController(QWidget *parent) :
     QObject::connect(ui->buttonShuffle, SIGNAL(clicked(bool)), this, SLOT(onShuffle()));
     QObject::connect(ui->buttonMute, SIGNAL(clicked(bool)), this, SLOT(onMute()));
     QObject::connect(ui->buttonConnectToRemoteServer, SIGNAL(clicked(bool)), this, SLOT(onConnectSynchronize()));
+    QObject::connect(ui->buttonSaveCurrent, SIGNAL(clicked(bool)), this, SLOT(onCurrentSave()));
+    QObject::connect(ui->buttonShowCurrent, SIGNAL(clicked(bool)), this, SLOT(showCurrentPlaylist()));
     QObject::connect(ui->sliderVolume, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChange(int)));
     QObject::connect(ui->sliderPosition, SIGNAL(valueChanged(int)), this, SLOT(onPositionChange(int)));
     QObject::connect(ui->actionNowPlaying, SIGNAL(triggered(bool)), this, SLOT(showNowPlaying()));
     QObject::connect(ui->actionAllMusic, SIGNAL(triggered(bool)), this, SLOT(showAllMusic()));
     QObject::connect(ui->actionPlaylists, SIGNAL(triggered(bool)), this, SLOT(showPlaylists()));
+    QObject::connect(ui->actionPreferences, SIGNAL(triggered(bool)), this, SLOT(showPreferences()));
     QObject::connect(ui->listMusic, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSongSelection(QModelIndex)));
     QObject::connect(ui->listPlaylists, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onPlaylistSelection(QModelIndex)));
 }
@@ -84,6 +89,13 @@ void RemoteController::listener()
                 this->ui->sliderPosition->setValue(data[2].toInt());
                 this->setNomFichier( data[3].toString() );
                 this->setNomPlaylist( data[4].toString() );
+                break;
+            case kCurrentPlaylistContent:
+                ui->listCurrentPlaylist->clear();
+                for(int i = 0; i < data.size(); i++)
+                {
+                    ui->listCurrentPlaylist->addItem(data[i].toString());
+                }
                 break;
         }
 
@@ -172,6 +184,8 @@ void RemoteController::showNowPlaying()
 {
     ui->frameAllMusic->hide();
     ui->framePlaylists->hide();
+    ui->framePreferences->hide();
+    ui->frameCurrentPlaylist->hide();
     ui->frameNowPlaying->show();
 }
 
@@ -179,6 +193,7 @@ void RemoteController::showAllMusic()
 {
     ui->frameNowPlaying->hide();
     ui->framePlaylists->hide();
+    ui->framePreferences->hide();
 
     this->sendCommand(kGetMusicList, QJsonArray() << true);
 
@@ -187,8 +202,10 @@ void RemoteController::showAllMusic()
 
 void RemoteController::onSongSelection(QModelIndex item)
 {
+    if(this->isPlaylist) ui->listCurrentPlaylist->clear();
     std::cout << "Selected: " + item.data().toString().toStdString() << std::endl;
     this->sendCommand(kLoadFile, QJsonArray() << item.data().toString());
+    ui->listCurrentPlaylist->addItem(item.data().toString());
     this->isPlaying = true;
     this->isPlaylist = false;
     QIcon icon(":/size24/media-playback-pause.png");
@@ -200,10 +217,19 @@ void RemoteController::showPlaylists()
 {
     ui->frameNowPlaying->hide();
     ui->frameAllMusic->hide();
+    ui->framePreferences->hide();
 
     this->sendCommand(kGetPlaylists, QJsonArray() << true);
 
     ui->framePlaylists->show();
+}
+
+void RemoteController::showPreferences()
+{
+    ui->frameNowPlaying->hide();
+    ui->frameAllMusic->hide();
+    ui->framePlaylists->hide();
+    ui->framePreferences->show();
 }
 
 void RemoteController::onPlaylistSelection(QModelIndex item)
@@ -213,6 +239,7 @@ void RemoteController::onPlaylistSelection(QModelIndex item)
     this->isPlaying = true;
     this->isPlaylist = true;
     this->nomPlaylist = item.data().toString();
+    this->sendCommand(kGetCurrentPlaylistContent, QJsonArray() << item.data().toString());
 }
 
 void RemoteController::onPrevious()
@@ -284,4 +311,26 @@ void RemoteController::setNomFichier(QString s)
 void RemoteController::setNomPlaylist(QString s)
 {
     this->nomPlaylist = s;
+}
+
+void RemoteController::onCurrentSave()
+{
+    QStringList * current(new QStringList);
+    int limit = ui->listCurrentPlaylist->count();
+
+    for(int i = 0; i < limit; i++)
+    {
+        current->append(ui->listCurrentPlaylist->item(i)->text());
+    }
+
+    this->sendCommand(kSaveCurrentPlaylist, QJsonArray::fromStringList(*current));
+}
+
+void RemoteController::showCurrentPlaylist()
+{
+    ui->frameNowPlaying->hide();
+    ui->frameAllMusic->hide();
+    ui->framePlaylists->hide();
+    ui->framePreferences->hide();
+    ui->frameCurrentPlaylist->show();
 }
