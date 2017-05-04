@@ -194,6 +194,7 @@ void RemoteController::showAllMusic()
     ui->frameNowPlaying->hide();
     ui->framePlaylists->hide();
     ui->framePreferences->hide();
+    ui->frameCurrentPlaylist->hide();
 
     this->sendCommand(kGetMusicList, QJsonArray() << true);
 
@@ -218,6 +219,7 @@ void RemoteController::showPlaylists()
     ui->frameNowPlaying->hide();
     ui->frameAllMusic->hide();
     ui->framePreferences->hide();
+    ui->frameCurrentPlaylist->hide();
 
     this->sendCommand(kGetPlaylists, QJsonArray() << true);
 
@@ -229,6 +231,7 @@ void RemoteController::showPreferences()
     ui->frameNowPlaying->hide();
     ui->frameAllMusic->hide();
     ui->framePlaylists->hide();
+    ui->frameCurrentPlaylist->hide();
     ui->framePreferences->show();
 }
 
