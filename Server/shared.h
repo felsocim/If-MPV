@@ -25,6 +25,7 @@ enum kCommand
     kShuffle,
     kQuit,
     kGetMusicList,
+    kGetMetadata,
     kGetPlaylists,
     kButtonMuet,
     kButtonPause,
@@ -43,6 +44,7 @@ enum kTransfer
 {
     kMusicList,
     kPlaylistList,
+    kMetadata,
     kRadioList,
     kCurrentState
 };

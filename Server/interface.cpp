@@ -161,6 +161,7 @@ void Interface::listen()
             {
                 this->nomFichier = obj["parameters"].toArray()[0].toString();
                 this->sendState();
+                this->sendCurrentMetadata();
             }
 
             if( ((kCommand)obj["command"].toInt()) == kLoadPlaylist )
@@ -205,6 +206,9 @@ void Interface::listen()
                     break;
                 case kGetPlaylists:
                     this->replyToClient(kPlaylistList, QJsonArray::fromStringList(*this->playlists));
+                    break;
+                case kMetadata:
+                    this->sendCurrentMetadata();
                     break;
             }
         }
@@ -287,4 +291,21 @@ void Interface::sendState(){
     currentState << this->nomPlaylist;
 
     this->replyToClient(kCurrentState,currentState);
+}
+
+void Interface::sendCurrentMetadata()
+{
+    TagLib::FileRef file(this->nomFichier.toStdString().data());
+    TagLib::String title = file.tag()->title();
+    TagLib::String artist = file.tag()->artist();
+    TagLib::String album = file.tag()->album();
+    TagLib::String genre = file.tag()->genre();
+
+    qDebug() << title.toCString(true);
+
+    QJsonArray parameters;
+
+    parameters << title.toCString(true) << artist.toCString(true) << album.toCString(true) << genre.toCString(true);
+
+    this->replyToClient(kMetadata, parameters);
 }

@@ -21,6 +21,7 @@ RemoteController::RemoteController(QWidget *parent) :
     QObject::connect(ui->buttonNext, SIGNAL(clicked(bool)), this, SLOT(onNext()));
     QObject::connect(ui->buttonShuffle, SIGNAL(clicked(bool)), this, SLOT(onShuffle()));
     QObject::connect(ui->buttonMute, SIGNAL(clicked(bool)), this, SLOT(onMute()));
+    QObject::connect(ui->buttonConnectToRemoteServer, SIGNAL(clicked(bool)), this, SLOT(onConnectSynchronize()));
     QObject::connect(ui->sliderVolume, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChange(int)));
     QObject::connect(ui->sliderPosition, SIGNAL(valueChanged(int)), this, SLOT(onPositionChange(int)));
     QObject::connect(ui->actionNowPlaying, SIGNAL(triggered(bool)), this, SLOT(showNowPlaying()));
@@ -70,12 +71,19 @@ void RemoteController::listener()
                     ui->listPlaylists->addItem(data[i].toString());
                 }
                 break;
+            case kMetadata:
+                this->ui->labelMediaTitle->setText(data[0].toString());
+                this->ui->labelMediaArtist->setText(data[1].toString());
+                this->ui->labelMediaAlbum->setText(data[2].toString());
+                this->ui->labelMediaGenre->setText(data[3].toString());
+                break;
             case kCurrentState:
                 this->majAutomate( (phase)data[0].toInt() );
                 this->ui->sliderVolume->setValue( data[1].toInt() );
+                this->ui->labelVolume->setText(QString::number(data[1].toInt())+"%");
                 this->ui->sliderPosition->setValue(data[2].toInt());
-                //this->setNomFichier( data[3].toString() );
-                //this->setNomPlaylist( data[4].toString() );
+                this->setNomFichier( data[3].toString() );
+                this->setNomPlaylist( data[4].toString() );
                 break;
         }
 
@@ -84,8 +92,12 @@ void RemoteController::listener()
 }
 
 void RemoteController::majAutomate(phase p){
+    QIcon icon_pause(":/size24/media-playback-pause.png");
+
     switch(p){
         case kPhaseInitial :
+            this->isPlaying = true;
+            ui->buttonPlayPause->setIcon(icon_pause);
             qDebug()<<"phase init";
         break;
 
@@ -181,6 +193,7 @@ void RemoteController::onSongSelection(QModelIndex item)
     this->isPlaylist = false;
     QIcon icon(":/size24/media-playback-pause.png");
     ui->buttonPlayPause->setIcon(icon);
+    this->nomFichier = item.data().toString();
 }
 
 void RemoteController::showPlaylists()
@@ -199,6 +212,7 @@ void RemoteController::onPlaylistSelection(QModelIndex item)
     this->sendCommand(kLoadPlaylist, QJsonArray() << item.data().toString());
     this->isPlaying = true;
     this->isPlaylist = true;
+    this->nomPlaylist = item.data().toString();
 }
 
 void RemoteController::onPrevious()
@@ -247,10 +261,27 @@ void RemoteController::onMute()
 
 void RemoteController::onVolumeChange(int val)
 {
+    this->ui->labelVolume->setText(QString::number(val) + "%");
     this->sendCommand(kSetProperty, QJsonArray() << "volume" << val);
 }
 
 void RemoteController::onPositionChange(int val)
 {
     this->sendCommand(kSetProperty, QJsonArray() << "percent-pos" << val);
+}
+
+void RemoteController::onConnectSynchronize()
+{
+    this->joinReceiver();
+}
+
+void RemoteController::setNomFichier(QString s)
+{
+    this->nomFichier = s;
+    this->sendCommand(kGetMetadata, QJsonArray() << "null");
+}
+
+void RemoteController::setNomPlaylist(QString s)
+{
+    this->nomPlaylist = s;
 }

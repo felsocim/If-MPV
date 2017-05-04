@@ -1,0 +1,12 @@
+prefix=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player
+exec_prefix=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player
+libdir=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player/lib
+includedir=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player/include
+
+
+Name: TagLib C Bindings
+Description: Audio meta-data library (C bindings)
+Requires: taglib
+Version: 1.11.1
+Libs: -L/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player/lib -ltag_c
+Cflags: -I/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player/include/taglib 

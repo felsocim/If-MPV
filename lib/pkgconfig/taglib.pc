@@ -1,0 +1,11 @@
+prefix=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player
+exec_prefix=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player
+libdir=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player/lib
+includedir=/home/marek/Dokumenty/Univerzita/Interfaces.Homme.Machine/Music-Player/include
+
+Name: TagLib
+Description: Audio meta-data library
+Requires: 
+Version: 1.11.1
+Libs: -L${libdir} -ltag
+Cflags: -I${includedir}/taglib

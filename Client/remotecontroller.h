@@ -34,8 +34,8 @@ private:
     void joinReceiver();
     void sendCommand(kCommand command, QJsonArray parameters);
     void majAutomate(phase p);
-    //void setNomFichier(QString s);
-    //void setNomPlaylist(QString s);
+    void setNomFichier(QString s);
+    void setNomPlaylist(QString s);
     QString nomFichier;
     QString nomPlaylist;
     bool isPlaylist;
@@ -56,6 +56,7 @@ private slots:
     void onMute();
     void onVolumeChange(int val);
     void onPositionChange(int val);
+    void onConnectSynchronize();
 };
 
 #endif // REMOTECONTROLLER_H

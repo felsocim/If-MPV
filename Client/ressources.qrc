@@ -11,6 +11,8 @@
         <file>media-playback-pause.png</file>
         <file>media-skip-backward.png</file>
         <file>media-skip-backward-rtl.png</file>
+        <file>network-server.png</file>
+        <file>document-save.png</file>
     </qresource>
     <qresource prefix="/pictures">
         <file>album.png</file>

@@ -11,6 +11,8 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QList>
+#include <taglib/taglib.h>
+#include <taglib/fileref.h>
 #include "player.h"
 #include "shared.h"
 #include "automate.h"
@@ -30,6 +32,7 @@ public:
     void launchServer();
     void replyToClient(kTransfer type, QJsonArray data);
     void sendState();
+    void sendCurrentMetadata();
 
 private:
     Ui::Interface *ui;
