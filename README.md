@@ -1,4 +1,4 @@
-# MPV Interface
+# If-MPV
 
 Proposition d'interface pour le lecteur multimédia MPV.
 
